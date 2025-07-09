@@ -41,8 +41,12 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Update kube config
-        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+      - name: Update kubeconfig
+        run: aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ env.AWS_REGION }}
 
       - name: Authenticate Kubernetes client
         run: |
