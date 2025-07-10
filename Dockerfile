@@ -14,5 +14,7 @@ FROM node:22-alpine
 WORKDIR /usr/src/app
 
 COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/package*.json ./
+RUN npm install --production
 
-CMD ["node", "main/main.js"]
+CMD ["node", "dist/main/main.js"]
