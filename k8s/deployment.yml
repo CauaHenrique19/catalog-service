@@ -30,13 +30,28 @@ spec:
             - name: PORT
               value: '3001'
             - name: DATABASE_HOST
-              value: 'host.docker.internal'
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: databaseHost
             - name: DATABASE_PORT
-              value: '5432'
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: databasePort
             - name: DATABASE_USERNAME
-              value: 'postgres'
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: databaseUsername
             - name: DATABASE_PASSWORD
-              value: '123456'
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: databasePassword
             - name: DATABASE_NAME
-              value: 'catalog'
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: databaseName
       restartPolicy: Always
