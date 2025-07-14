@@ -10,7 +10,6 @@ export class CreateCategoryController implements Controller {
       const createdCategory = await this.createCategory.create(request);
       return createdSuccess(createdCategory);
     } catch (error) {
-      console.log(error);
       return serverError(error);
     }
   }
