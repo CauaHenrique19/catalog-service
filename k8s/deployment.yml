@@ -32,26 +32,26 @@ spec:
             - name: DATABASE_HOST
               valueFrom:
                 secretKeyRef:
-                  name: aws-secret
-                  key: databaseHost
+                  name: catalog-service-external-secret
+                  key: DATABASE_HOST
             - name: DATABASE_PORT
               valueFrom:
                 secretKeyRef:
-                  name: aws-secret
-                  key: databasePort
+                  name: catalog-service-external-secret
+                  key: DATABASE_PORT
             - name: DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: aws-secret
-                  key: databaseUsername
+                  name: catalog-service-external-secret
+                  key: DATABASE_USERNAME
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: aws-secret
-                  key: databasePassword
+                  name: catalog-service-external-secret
+                  key: DATABASE_PASSWORD
             - name: DATABASE_NAME
               valueFrom:
                 secretKeyRef:
-                  name: aws-secret
-                  key: databaseName
+                  name: catalog-service-external-secret
+                  key: DATABASE_NAME
       restartPolicy: Always
