@@ -10,8 +10,8 @@ import { AppDataSource } from '@catalog-service/infra/orm/typeorm/data-source';
 export class MediaRepository implements FindMediasRepository, CreateMediaRepository, UpdateMediaUseCase {
   private readonly mediaRepository: Repository<Media>;
 
-  constructor(@Inject(MEDIA_REPOSITORY) private readonly Category: EntityTarget<Media>) {
-    this.mediaRepository = AppDataSource.getRepository(this.Category);
+  constructor(@Inject(MEDIA_REPOSITORY) private readonly Media: EntityTarget<Media>) {
+    this.mediaRepository = AppDataSource.getRepository(this.Media);
   }
 
   find(parameters?: FindMediasRepository.Parameters): Promise<FindMediasRepository.Result> {

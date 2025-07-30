@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Media, Category } from '@catalog-service/infra/orm/entities';
+import { Media, Category, ReviewInMedia } from '@catalog-service/infra/orm/entities';
 import { CONFIG } from 'src/config';
 
 export const AppDataSource = new DataSource({
@@ -11,13 +11,16 @@ export const AppDataSource = new DataSource({
   database: CONFIG.DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: [Category, Media],
+  entities: [Category, Media, ReviewInMedia],
   subscribers: [],
   migrations: [],
-  ssl: true,
-  extra: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  },
+  ssl: CONFIG.NODE_ENV === 'development' ? false : true,
+  extra:
+    CONFIG.NODE_ENV === 'development'
+      ? {}
+      : {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
 });

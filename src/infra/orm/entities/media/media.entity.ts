@@ -18,6 +18,9 @@ export class Media implements MediaModel {
   @Column()
   synopsis: string;
 
+  @Column({ name: 'community_average', type: 'decimal', nullable: true })
+  communityAverage?: number;
+
   @Column({
     type: 'enum',
     enum: StatusEnum,
