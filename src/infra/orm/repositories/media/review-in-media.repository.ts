@@ -3,13 +3,16 @@ import { EntityTarget, FindOptionsWhere, Repository } from 'typeorm';
 
 import {
   CreateReviewInMediaRepository,
+  DeleteReviewInMediaRepository,
   FindReviewsInMediaRepository,
 } from '@catalog-service/data/protocols/db';
 import { ReviewInMedia } from '@catalog-service/infra/orm/entities';
 import { AppDataSource } from '@catalog-service/infra/orm/typeorm/data-source';
 import { REVIEW_IN_MEDIA_REPOSITORY } from '@catalog-service/infra/orm/typeorm/typeorm.repositories';
 
-export class ReviewInMediaRepository implements FindReviewsInMediaRepository, CreateReviewInMediaRepository {
+export class ReviewInMediaRepository
+  implements FindReviewsInMediaRepository, CreateReviewInMediaRepository, DeleteReviewInMediaRepository
+{
   private readonly reviewInMediaRepository: Repository<ReviewInMedia>;
 
   constructor(
@@ -40,5 +43,11 @@ export class ReviewInMediaRepository implements FindReviewsInMediaRepository, Cr
 
     await this.reviewInMediaRepository.save(reviewInMedia);
     return reviewInMedia;
+  }
+
+  async delete(
+    parameters: DeleteReviewInMediaRepository.Parameters,
+  ): Promise<DeleteReviewInMediaRepository.Result> {
+    await this.reviewInMediaRepository.delete({ reviewId: parameters.reviewId });
   }
 }

@@ -1,4 +1,4 @@
-import { CalculateMediaCommunityAverageUseCase } from '@catalog-service/domain/usecases';
+import { CalculateMediaCommunityAverageUseCase, Operation } from '@catalog-service/domain/usecases';
 import { Listener, ListenerResponse } from '@catalog-service/presentation/protocols';
 
 export class CalculateMediaCommunityAverageListener implements Listener {
@@ -13,6 +13,7 @@ export class CalculateMediaCommunityAverageListener implements Listener {
         mediaId: parameters.mediaId,
         stars: parameters.stars,
         reviewCreatedAt: parameters.createdAt,
+        operation: parameters.operation,
       });
 
       return {
@@ -32,5 +33,6 @@ export namespace CalculateMediaCommunityAverageListener {
     mediaId: string;
     stars: number;
     createdAt: Date;
+    operation: Operation;
   };
 }

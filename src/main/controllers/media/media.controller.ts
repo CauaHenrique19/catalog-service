@@ -26,6 +26,7 @@ import {
   CreatedReviewDTO,
 } from '@catalog-service/main/controllers/media/dto';
 import { BuildCalculateMediaCommunityAverageListener } from '@catalog-service/main/factories/listeners';
+import { Operation } from '@catalog-service/domain/usecases';
 import { Ctx, KafkaContext, MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('media')
@@ -63,9 +64,28 @@ export class MediaController {
   }
 
   @MessagePattern('created_review')
-  async listenNewReviews(@Payload() review: CreatedReviewDTO, @Ctx() context: KafkaContext) {
+  async listenNewReview(@Payload() review: CreatedReviewDTO, @Ctx() context: KafkaContext) {
     const result = await listenerAdapter(this.buildCalculateMediaCommunityAverageListener.build(), {
       ...review,
+      operation: Operation.CREATE,
+    });
+
+    if (result.processed) {
+      const topic = context.getTopic();
+      const partition = context.getPartition();
+      const offset = context.getMessage().offset;
+
+      await context.getConsumer().commitOffsets([{ topic, partition, offset }]);
+    } else {
+      // retry or send to DLQ
+    }
+  }
+
+  @MessagePattern('deleted_review')
+  async listenDeleteReview(@Payload() review: CreatedReviewDTO, @Ctx() context: KafkaContext) {
+    const result = await listenerAdapter(this.buildCalculateMediaCommunityAverageListener.build(), {
+      ...review,
+      operation: Operation.DELETE,
     });
 
     if (result.processed) {

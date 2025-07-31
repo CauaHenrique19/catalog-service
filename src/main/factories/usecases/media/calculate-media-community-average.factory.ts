@@ -14,6 +14,7 @@ export const calculateMediaCommunityAverageFactory: Provider = {
     return new CalculateMediaCommunityAverage(
       reviewInMediaRepository,
       reviewInMediaRepository,
+      reviewInMediaRepository,
       mediaRepository,
     );
   },
