@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   Post,
   Put,
@@ -28,9 +29,12 @@ import {
 import { BuildCalculateMediaCommunityAverageListener } from '@catalog-service/main/factories/listeners';
 import { Operation } from '@catalog-service/domain/usecases';
 import { Ctx, KafkaContext, MessagePattern, Payload } from '@nestjs/microservices';
+import { handleCommitOffsetKafka, handleRetryKafka } from '@catalog-service/main/utils';
 
 @Controller('media')
 export class MediaController {
+  private readonly logger = new Logger(MediaController.name, { timestamp: true });
+
   constructor(
     private readonly buildFindMediasController: BuildFindMediasController,
     private readonly buildCreateMediaController: BuildCreateMediaController,
@@ -71,13 +75,9 @@ export class MediaController {
     });
 
     if (result.processed) {
-      const topic = context.getTopic();
-      const partition = context.getPartition();
-      const offset = context.getMessage().offset;
-
-      await context.getConsumer().commitOffsets([{ topic, partition, offset }]);
+      await handleCommitOffsetKafka(context);
     } else {
-      // retry or send to DLQ
+      await handleRetryKafka(context, result.error, this.logger);
     }
   }
 
@@ -89,13 +89,9 @@ export class MediaController {
     });
 
     if (result.processed) {
-      const topic = context.getTopic();
-      const partition = context.getPartition();
-      const offset = context.getMessage().offset;
-
-      await context.getConsumer().commitOffsets([{ topic, partition, offset }]);
+      await handleCommitOffsetKafka(context);
     } else {
-      // retry or send to DLQ
+      await handleRetryKafka(context, result.error, this.logger);
     }
   }
 }

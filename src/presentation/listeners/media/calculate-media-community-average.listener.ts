@@ -22,6 +22,7 @@ export class CalculateMediaCommunityAverageListener implements Listener {
     } catch (error) {
       return {
         processed: false,
+        error,
       };
     }
   }
