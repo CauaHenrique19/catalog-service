@@ -49,9 +49,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ steps.get-timestamp.outputs.timestamp }}
         run: |
-          sed -i.bak "s|CATALOG_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" k8s/deployment.yml
-          kubectl apply -f k8s/secret-store.yml
-          kubectl apply -f k8s/external-secret.yml
-          kubectl apply -f k8s/deployment.yml --validate=false
-          kubectl apply -f k8s/hpa.yml
-          kubectl apply -f k8s/service.yml
+          sed -i.bak "s|CATALOG_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" k8s/prod/deployment.yml
+          kubectl apply -f k8s/prod/secret-store.yml
+          kubectl apply -f k8s/prod/external-secret.yml
+          kubectl apply -f k8s/prod/deployment.yml --validate=false
+          kubectl apply -f k8s/prod/hpa.yml
+          kubectl apply -f k8s/prod/service.yml
