@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: catalog-service
-          image: CATALOG_IMAGE
+          image: cauahrq/catalog-service:v6
           ports:
             - containerPort: 3001
           resources:
@@ -30,7 +30,7 @@ spec:
             - name: PORT
               value: '3001'
             - name: DATABASE_HOST
-              value: 'localhost'
+              value: 'host.docker.internal'
             - name: DATABASE_PORT
               value: '5432'
             - name: DATABASE_USERNAME
@@ -42,7 +42,7 @@ spec:
             - name: SERVICE_NAME
               value: 'catalog-service'
             - name: KAFKA_BROKER_HOST
-              value: 'localhost:9094'
+              value: 'host.docker.internal:9094'
             - name: NODE_ENV
               value: 'development'
       restartPolicy: Always
