@@ -1,13 +1,19 @@
 import { Inject } from '@nestjs/common';
 import { EntityTarget, FindOptionsWhere, Repository } from 'typeorm';
 
-import { CreateMediaRepository, FindMediasRepository } from '@catalog-service/data/protocols/db';
+import {
+  CreateMediaRepository,
+  FindMediaByIdRepository,
+  FindMediasRepository,
+} from '@catalog-service/data/protocols/db';
 import { UpdateMediaUseCase } from '@catalog-service/domain/usecases';
 import { MEDIA_REPOSITORY } from '@catalog-service/infra/orm/typeorm/typeorm.repositories';
 import { Media } from '@catalog-service/infra/orm/entities';
 import { AppDataSource } from '@catalog-service/infra/orm/typeorm/data-source';
 
-export class MediaRepository implements FindMediasRepository, CreateMediaRepository, UpdateMediaUseCase {
+export class MediaRepository
+  implements FindMediasRepository, FindMediaByIdRepository, CreateMediaRepository, UpdateMediaUseCase
+{
   private readonly mediaRepository: Repository<Media>;
 
   constructor(@Inject(MEDIA_REPOSITORY) private readonly Media: EntityTarget<Media>) {
@@ -23,6 +29,14 @@ export class MediaRepository implements FindMediasRepository, CreateMediaReposit
 
     return this.mediaRepository.find({
       where,
+    });
+  }
+
+  findById(parameters: FindMediaByIdRepository.Parameters): Promise<FindMediaByIdRepository.Result> {
+    return this.mediaRepository.findOne({
+      where: {
+        id: parameters.id,
+      },
     });
   }
 

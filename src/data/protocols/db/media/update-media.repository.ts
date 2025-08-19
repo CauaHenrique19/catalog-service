@@ -6,6 +6,11 @@ export interface UpdateMediaRepository {
 
 export namespace UpdateMediaRepository {
   export type Parameters = Pick<MediaModel, 'id'> &
-    Partial<Pick<MediaModel, 'name' | 'synopsis' | 'categoryId' | 'communityAverage' | 'status'>>;
+    Partial<
+      Pick<
+        MediaModel,
+        'name' | 'synopsis' | 'categoryId' | 'sumStars' | 'amountReviews' | 'communityAverage' | 'status'
+      >
+    >;
   export type Result = MediaModel;
 }

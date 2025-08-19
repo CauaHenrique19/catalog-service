@@ -1,14 +1,15 @@
 import {
   CreateReviewInMediaRepository,
   DeleteReviewInMediaRepository,
-  FindReviewsInMediaRepository,
+  FindMediaByIdRepository,
   UpdateMediaRepository,
 } from '@catalog-service/data/protocols/db';
+import { MediaNotFoundError } from '@catalog-service/domain/errors';
 import { CalculateMediaCommunityAverageUseCase, Operation } from '@catalog-service/domain/usecases';
 
 export class CalculateMediaCommunityAverage implements CalculateMediaCommunityAverageUseCase {
   constructor(
-    private readonly findReviewsInMediaRepository: FindReviewsInMediaRepository,
+    private readonly findMediaByIdRepository: FindMediaByIdRepository,
     private readonly createReviewInMediaRepository: CreateReviewInMediaRepository,
     private readonly deleteReviewInMediaRepository: DeleteReviewInMediaRepository,
     private readonly updateMediaRepository: UpdateMediaRepository,
@@ -31,16 +32,19 @@ export class CalculateMediaCommunityAverage implements CalculateMediaCommunityAv
       });
     }
 
-    const reviews = await this.findReviewsInMediaRepository.find({
-      mediaId: parameters.mediaId,
-    });
+    const media = await this.findMediaByIdRepository.findById({ id: parameters.mediaId });
+    if (!media) {
+      throw new MediaNotFoundError();
+    }
 
-    const starsSum = reviews.reduce((accumulated, review) => (review.stars += accumulated), 0);
-    const totalReviews = reviews.length;
+    const starsSum = media.sumStars ? (media.sumStars += parameters.stars) : parameters.stars;
+    const totalReviews = media.amountReviews ? (media.amountReviews += 1) : 1;
     const average = starsSum / totalReviews;
 
     await this.updateMediaRepository.update({
       id: parameters.mediaId,
+      sumStars: starsSum,
+      amountReviews: totalReviews,
       communityAverage: average,
     });
   }

@@ -5,6 +5,8 @@ export interface MediaModel {
   name: string;
   synopsis: string;
   categoryId: string;
+  sumStars?: number;
+  amountReviews?: number;
   communityAverage?: number;
   status: StatusEnum;
   createdAt: Date;

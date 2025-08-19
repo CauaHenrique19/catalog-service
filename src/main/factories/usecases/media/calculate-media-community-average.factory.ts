@@ -12,7 +12,7 @@ export const calculateMediaCommunityAverageFactory: Provider = {
     mediaRepository: MediaRepository,
   ): CalculateMediaCommunityAverageUseCase => {
     return new CalculateMediaCommunityAverage(
-      reviewInMediaRepository,
+      mediaRepository,
       reviewInMediaRepository,
       reviewInMediaRepository,
       mediaRepository,
